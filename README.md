@@ -5,7 +5,7 @@ A very simple Python application used to consume Kafka messages. Displays inform
 This application uses PyKafka for Kafka consumer functionality. Download it from here:
 [https://github.com/Parsely/pykafka](https://github.com/Parsely/pykafka).
 
-For the `ParseNDArray_fb` parser, flatbuffers is required which can be downloaded from: [https://github.com/google/flatbuffers](https://github.com/google/flatbuffers).
+For the `ParseNDArray_fb` parser, flatbuffers is required which can be downloaded from: [https://github.com/google/flatbuffers](https://github.com/google/flatbuffers). The visualisation functionality in `ParseNDArray_fb` also requires `matplotlib` to be installed.
 
 All other libraries should be included in a standard Python installation. Note however that this application has only been tested with Python 3.5.
 
@@ -27,8 +27,4 @@ Some examples of running the application follows:
 
 ## Extending the functionality
 Use `StrinParser.py` and `ParseNDArray_fb.py` as templates for writing your own parsers.
-
-##To-do
-I intend to implement some basic functionality in `ParseNDArray_fb` for displaying image data.
-
 
