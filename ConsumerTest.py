@@ -7,6 +7,7 @@ import argparse
 import signal
 import time
 import struct
+import codecs
 
 def main():
     parser = argparse.ArgumentParser()
@@ -24,9 +25,11 @@ def main():
         print("Broker and topic must be given as arguments.")
         exit(0)
     client = KafkaClient(hosts=args.b)
-    topic = client.topics[bytes(args.t, "utf-8")]
+    #topic = client.topics[bytes(args.t, "utf-8")]
+    topic = client.topics[codecs.encode(args.t, "utf-8")]
     #consumer = topic.get_simple_consumer(fetch_message_max_bytes = 1024 * 1024 * 50)
-    consumer = topic.get_simple_consumer(fetch_message_max_bytes = 1024 * 1024 * 50, consumer_group=bytes("mygroup", "utf-8"), auto_offset_reset=OffsetType.LATEST, reset_offset_on_start=True, consumer_timeout_ms=50)
+    #consumer = topic.get_simple_consumer(fetch_message_max_bytes = 1024 * 1024 * 50, consumer_group=bytes("mygroup", "utf-8"), auto_offset_reset=OffsetType.LATEST, reset_offset_on_start=True, consumer_timeout_ms=50)
+    consumer = topic.get_simple_consumer(fetch_message_max_bytes = 1024 * 1024 * 50, consumer_group=codecs.encode(args.t, "utf-8"), auto_offset_reset=OffsetType.LATEST, reset_offset_on_start=True, consumer_timeout_ms=50)
     #consumer.
     
     parser = None

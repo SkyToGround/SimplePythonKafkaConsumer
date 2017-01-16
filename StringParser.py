@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from BaseDataParser import BaseDataParser
+import codecs
 
 class StringParser(BaseDataParser):
     def __init__(self):
@@ -17,7 +18,7 @@ class StringParser(BaseDataParser):
         ret_dict = {}
         self.nr_of_strings += 1
         ret_dict["nr_of_strings"] = self.nr_of_strings
-        ret_dict["nr_of_words"] = len(data.split(bytes(" ", "utf-8")))
+        ret_dict["nr_of_words"] = len(data.split(codecs.encode(" ", "utf-8")))
         ret_dict["string"] = data
         
         return ret_dict

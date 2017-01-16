@@ -3,6 +3,7 @@
 
 import time
 import curses
+import codecs
         
 class BaseDataParser(object):
     def __init__(self, extra_params = []):
@@ -15,7 +16,7 @@ class BaseDataParser(object):
         self.extra_params = extra_params
         self.current_dict = {}
         
-        self.parse_data(bytes("", "utf-8"), 0)
+        self.parse_data(codecs.encode("", "utf-8"), 0)
     
     def __del__(self):
         pass
@@ -38,6 +39,8 @@ class BaseDataParser(object):
             self.stdscr.addstr(line + 2, key_width, "%20s" % value)
         elif (c_type == bytes):
             self.stdscr.addstr(line + 2, key_width, "%20s" % value.decode("utf-8"))
+        elif (c_type == unicode):
+            self.stdscr.addstr(line + 2, key_width, "%20s" % value)
         else:
             self.stdscr.addstr(line + 2, key_width, "%20s" % "Unknown type: " + str(type(value)))
 

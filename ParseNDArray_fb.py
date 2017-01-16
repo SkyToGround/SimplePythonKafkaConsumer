@@ -15,7 +15,7 @@ class ParseNDArray_fb(BaseDataParser):
     def __init__(self):
         param_list = ["flatbuffer", "name", "id", "timestamp", "dims_length", "dims", "data_type", "data_bytes", "epics_epoch", "epics_nsec", "attributes"]
         super(ParseNDArray_fb, self).__init__(param_list)
-        self.type_list = ["int8", "uint8", "int16", "uint16", "int32", "uint32", "float32", "float64", "c_string"]
+        self.type_list = [u"int8", u"uint8", u"int16", u"uint16", u"int32", u"uint32", u"float32", u"float64", u"c_string"]
         self.struct_char = ["b", "B", "h", "H", "i", "I", "f", "d", "s"]
         self.numpy_arr_type = [np.int8, np.uint8, np.int16, np.uint16, np.int32, np.uint32, np.float32, np.float64]
         self.img = None
@@ -67,13 +67,22 @@ class ParseNDArray_fb(BaseDataParser):
         nr_of_attr = arr.PAttributeListLength()
         for j in range(nr_of_attr):
             c_attr = arr.PAttributeList(j)
-            attr_list.append(c_attr.PName().decode("utf-8") + " : " + self.GetAttrValueStr(c_attr) + " <%s>" % self.type_list[c_attr.DataType()])
+            attr_list.append(c_attr.PName().decode("utf-8") + u" : " + self.GetAttrValueStr(c_attr) + u" <%s>" % self.type_list[c_attr.DataType()])
         ret_dict["attributes"] = attr_list
         data = self.GetDataArr(arr)
+        # if (arr.DimsLength() == 3):
+        #     #data = np.rollaxis(data, 0, 3)
+        #     data = data.transpose()
         if (self.img == None):
             self.img = plt.imshow(data)
+            self.im_dims = dims_str
         else:
-            self.img.set_array(data)
+            if (self.im_dims == dims_str):
+                self.img.set_array(data)
+            else:
+                self.im_dims = dims_str
+                plt.clf()
+                self.img = plt.imshow(data)
         plt.pause(0.001)
         
         return ret_dict
