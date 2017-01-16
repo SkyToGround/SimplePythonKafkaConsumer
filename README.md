@@ -7,7 +7,7 @@ This application uses PyKafka for Kafka consumer functionality. Download it from
 
 For the `ParseNDArray_fb` parser, flatbuffers is required which can be downloaded from: [https://github.com/google/flatbuffers](https://github.com/google/flatbuffers). The visualisation functionality in `ParseNDArray_fb` also requires `matplotlib` to be installed.
 
-All other libraries should be included in a standard Python installation. Note however that this application has only been tested with Python 3.5.
+All other libraries should be included in a standard Python installation. The application has been tested with Python 2.7 and Python 3.5 and should work with all versions in between.
 
 ## Running the application
 The following arguments are possible/required:
