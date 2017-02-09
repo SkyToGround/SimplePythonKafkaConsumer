@@ -10,10 +10,11 @@ import struct
 # import matplotlib
 # matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
+hasSavedOne = False
 
 class ParseNDArray_fb(BaseDataParser):
     def __init__(self):
-        param_list = ["flatbuffer", "name", "id", "timestamp", "dims_length", "dims", "data_type", "data_bytes", "epics_epoch", "epics_nsec", "attributes"]
+        param_list = ["flatbuffer", "id", "timestamp", "dims_length", "dims", "data_type", "data_bytes", "epics_epoch", "epics_nsec", "attributes"]
         super(ParseNDArray_fb, self).__init__(param_list)
         self.type_list = [u"int8", u"uint8", u"int16", u"uint16", u"int32", u"uint32", u"float32", u"float64", u"c_string"]
         self.struct_char = ["b", "B", "h", "H", "i", "I", "f", "d", "s"]
@@ -32,16 +33,20 @@ class ParseNDArray_fb(BaseDataParser):
     
     def GetDataArr(self, fb_arr):
         nr_of_bytes = fb_arr.PDataLength()
+        raw_data = fb_arr.PData_as_numpy_array()
         dim_list = [fb_arr.Dims(0), ]
         for i in range(1, fb_arr.DimsLength()):
             dim_list.append(fb_arr.Dims(i))
-        np_buffer = np.empty([nr_of_bytes, ], dtype = np.uint8)
-        for i in range(nr_of_bytes):
-            np_buffer[i] = fb_arr.PData(i)
-        data_arr = np.fromstring(np_buffer.tobytes(), dtype = self.numpy_arr_type[fb_arr.DataType()]).reshape(dim_list)
+        data_arr = raw_data.view(self.numpy_arr_type[fb_arr.DataType()]).reshape(dim_list)
         return data_arr
 
     def my_fb_parser(self, data):
+        global hasSavedOne
+        if (not hasSavedOne):
+            out_file = open("someNDArray.data", "wb")
+            out_file.write(data)
+            out_file.close()
+            hasSavedOne = True
         ret_dict = {}
         try:
             arr = NDArray.NDArray.GetRootAsNDArray(bytearray(data), 0)
@@ -50,7 +55,6 @@ class ParseNDArray_fb(BaseDataParser):
             return ret_dict
         ret_dict["flatbuffer"] = "Success"
         ret_dict["timestamp"] = arr.TimeStamp()
-        ret_dict["name"] = arr.Name()
         ret_dict["id"] = arr.Id()
         ret_dict["dims_length"] = arr.DimsLength()
         dims_str = str(arr.Dims(0))

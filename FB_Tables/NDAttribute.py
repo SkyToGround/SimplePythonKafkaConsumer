@@ -55,6 +55,19 @@ class NDAttribute(object):
         return 0
 
     # NDAttribute
+    def PData_as_numpy_array(self):
+        import numpy
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return numpy.frombuffer(
+                self._tab.Bytes,
+                numpy.dtype('<u1'),
+                self._tab.VectorLen(o),
+                self._tab.Vector(o)
+            )
+        return None
+
+    # NDAttribute
     def PDataLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
