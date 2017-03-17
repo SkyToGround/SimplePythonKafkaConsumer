@@ -39,8 +39,8 @@ class BaseDataParser(object):
             self.stdscr.addstr(line + 2, key_width, "%20s" % value)
         elif (c_type == bytes):
             self.stdscr.addstr(line + 2, key_width, "%20s" % value.decode("utf-8"))
-        elif (c_type == unicode):
-            self.stdscr.addstr(line + 2, key_width, "%20s" % value)
+        # elif (c_type == unicode):
+        #     self.stdscr.addstr(line + 2, key_width, "%20s" % value)
         else:
             self.stdscr.addstr(line + 2, key_width, "%20s" % "Unknown type: " + str(type(value)))
 

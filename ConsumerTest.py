@@ -15,6 +15,7 @@ def main():
     parser.add_argument("-t", help = "Topic to subscribe to.", type = str)
     parser.add_argument("-p", help = "Name of the file holding the parser. Defaults to \"BaseDataParser\".", type = str)
     parser.add_argument("-d", help = "Run in debug mode. Will not clean up curses-library on exit so that error messages can be seen.", action="store_true")
+    parser.add_argument("-s", help = "Set to consume messages from the beginning.", action="store_true")
     args = parser.parse_args()
     
     class_name_str = "BaseDataParser"
@@ -29,7 +30,10 @@ def main():
     topic = client.topics[codecs.encode(args.t, "utf-8")]
     #consumer = topic.get_simple_consumer(fetch_message_max_bytes = 1024 * 1024 * 50)
     #consumer = topic.get_simple_consumer(fetch_message_max_bytes = 1024 * 1024 * 50, consumer_group=bytes("mygroup", "utf-8"), auto_offset_reset=OffsetType.LATEST, reset_offset_on_start=True, consumer_timeout_ms=50)
-    consumer = topic.get_simple_consumer(fetch_message_max_bytes = 1024 * 1024 * 50, consumer_group=codecs.encode(args.t, "utf-8"), auto_offset_reset=OffsetType.LATEST, reset_offset_on_start=True, consumer_timeout_ms=50)
+    start_offset = OffsetType.LATEST
+    if (args.s):
+        start_offset = OffsetType.EARLIEST
+    consumer = topic.get_simple_consumer(fetch_message_max_bytes = 1024 * 1024 * 50, consumer_group=codecs.encode(args.t, "utf-8"), auto_offset_reset=start_offset, reset_offset_on_start=True, consumer_timeout_ms=50)
     #consumer.
     
     parser = None
